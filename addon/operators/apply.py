@@ -5,6 +5,47 @@ import bpy
 from bpy.types import Operator
 
 from ..core.engine import DamageEngine
+from ..core.exceptions import ADGError
+
+
+class ADG_OT_apply_damage(Operator):
+
+    bl_idname = "adg.apply_damage"
+
+    bl_label = "Apply Damage"
+
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+
+        obj = context.active_object
+
+        return (
+            obj is not None
+            and obj.type == "MESH"
+            and context.mode == "SCULPT"
+        )
+
+    def execute(self, context):
+
+        try:
+
+            DamageEngine(context).execute()
+
+        except ADGError as exc:
+
+            self.report({'ERROR'}, str(exc))
+
+            return {'CANCELLED'}
+
+        return {'FINISHED'}from __future__ import annotations
+
+import bpy
+
+from bpy.types import Operator
+
+from ..core.engine import DamageEngine
 from ..core.logger import LOGGER
 
 
