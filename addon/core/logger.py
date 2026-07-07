@@ -1,4 +1,43 @@
-"""
+from __future__ import annotations
+
+import logging
+from contextlib import contextmanager
+from time import perf_counter
+
+LOGGER = logging.getLogger("AutoDamageGenerator")
+
+if not LOGGER.handlers:
+
+    handler = logging.StreamHandler()
+
+    formatter = logging.Formatter(
+        "[ADG] %(levelname)-8s %(message)s"
+    )
+
+    handler.setFormatter(formatter)
+
+    LOGGER.addHandler(handler)
+
+LOGGER.setLevel(logging.INFO)
+LOGGER.propagate = False
+
+
+@contextmanager
+def timer(name: str):
+
+    start = perf_counter()
+
+    try:
+        yield
+    finally:
+
+        duration = (perf_counter() - start) * 1000
+
+        LOGGER.debug(
+            "%s finished in %.2f ms",
+            name,
+            duration,
+        )"""
 Central logging for Auto Damage Generator.
 """
 
